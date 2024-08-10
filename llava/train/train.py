@@ -21,6 +21,7 @@ import json
 import logging
 import pathlib
 from typing import Dict, Optional, Sequence, List
+from llava.model.language_model.llava_llama import LlavaLlamaForCausalLM
 
 import torch
 

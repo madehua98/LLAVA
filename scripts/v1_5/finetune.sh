@@ -1,13 +1,19 @@
 #!/bin/bash
 
-deepspeed llava/train/train_mem.py \
+export PYTHONPATH=/home/data_llm/madehua/LLaVA
+cd /home/data_llm/madehua/LLaVA
+gpus="1,2,3,4,5,6,7,8"
+echo $gpus
+image_tower='/media/fast_data/model/FoodCLIP-B-20-noc.pt'
+
+deepspeed --include localhost:$gpus llava/train/train_xformers.py \
     --deepspeed ./scripts/zero3.json \
-    --model_name_or_path lmsys/vicuna-13b-v1.5 \
+    --model_name_or_path /media/fast_data/model/vicuna-7b-v1.5 \
     --version v1 \
-    --data_path ./playground/data/llava_v1_5_mix665k.json \
-    --image_folder ./playground/data \
-    --vision_tower openai/clip-vit-large-patch14-336 \
-    --pretrain_mm_mlp_adapter ./checkpoints/llava-v1.5-13b-pretrain/mm_projector.bin \
+    --data_path /mnt/data_llm/json_file/101_train_prompt10.json \
+    --image_folder /media/fast_data \
+    --vision_tower $image_tower \
+    --pretrain_mm_mlp_adapter /mnt/data_llm/model/checkpoints/llava1.5-7b-pretrain/mm_projector.bin \
     --mm_projector_type mlp2x_gelu \
     --mm_vision_select_layer -2 \
     --mm_use_im_start_end False \
@@ -15,23 +21,22 @@ deepspeed llava/train/train_mem.py \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir ./checkpoints/llava-v1.5-13b \
-    --num_train_epochs 1 \
-    --per_device_train_batch_size 16 \
+    --output_dir /mnt/data_llm/model/checkpoints/llava1.5-7b-food101 \
+    --num_train_epochs 2 \
+    --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
-    --gradient_accumulation_steps 1 \
+    --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
-    --save_strategy "steps" \
-    --save_steps 50000 \
-    --save_total_limit 1 \
+    --save_strategy "epoch" \
+    --save_total_limit 2 \
     --learning_rate 2e-5 \
     --weight_decay 0. \
     --warmup_ratio 0.03 \
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --tf32 True \
-    --model_max_length 2048 \
+    --model_max_length 1024 \
     --gradient_checkpointing True \
-    --dataloader_num_workers 4 \
-    --lazy_preprocess True \
-    --report_to wandb
+    --dataloader_num_workers 64 \
+    --lazy_preprocess True 
+    # --report_to None

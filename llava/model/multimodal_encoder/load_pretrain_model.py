@@ -87,7 +87,6 @@ def load_pretrained_model(
         wts = wt_loc
     else:
         wts = torch.load(wt_loc, map_location="cpu")
-    print("Loaded weights keys: ", wts.keys())
     
     if not args:
         raise ValueError("Expected additional arguments in 'args'")
@@ -136,14 +135,10 @@ def load_pretrained_model(
         for before, after in rename_scopes_map:
             wts = {re.sub(before, after, key): value for key, value in wts.items()}
     
-    print("Modified weights keys: ", wts.keys())
-
     strict = not bool(missing_scopes)
 
     module = unwrap_model_fn(model)
     
-    print("Model before loading state dict: ", module)
-    print("Type of module: ", type(module))
     
     if not isinstance(module, torch.nn.Module):
         raise TypeError("The unwrapped model is not an instance of torch.nn.Module")
@@ -155,9 +150,6 @@ def load_pretrained_model(
     except TypeError as e:
         print(f"Error loading state dict: {e}")
         raise
-
-    print("Missing keys: ", missing_keys)
-    print("Unexpected keys: ", unexpected_keys)
 
     if unexpected_keys:
         raise Exception(

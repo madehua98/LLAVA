@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from .foodv_model import foodvImageEncoder, foodvImageProcessor
+from llava.model.multimodal_encoder.foodv_model import foodvImageEncoder, foodvImageProcessor
 import os
 import argparse
 import re

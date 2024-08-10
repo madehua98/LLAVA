@@ -17,6 +17,7 @@ import os
 import warnings
 import shutil
 
+from llava.model.language_model.llava_llama import LlavaLlamaForCausalLM
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig, BitsAndBytesConfig
 import torch
 from llava.model import *
