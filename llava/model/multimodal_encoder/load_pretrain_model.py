@@ -143,7 +143,6 @@ def load_pretrained_model(
     if not isinstance(module, torch.nn.Module):
         raise TypeError("The unwrapped model is not an instance of torch.nn.Module")
     
-    initialize_meta_parameters(module, device)
     
     try:
         missing_keys, unexpected_keys = module.load_state_dict(wts, strict=strict)
@@ -175,5 +174,4 @@ def load_pretrained_model(
 
     model.to(device)
 
-    convert_to_bfloat16(model)
     return model

@@ -4,8 +4,10 @@ export PYTHONPATH=/home/data_llm/madehua/LLaVA
 cd /home/data_llm/madehua/LLaVA
 gpus="1,2,3,4,5,6,7,8"
 echo $gpus
-image_tower='/media/fast_data/model/clip-vit-large-patch14-336'
+#image_tower='/media/fast_data/model/clip-vit-large-patch14-336'
 #image_tower='/media/fast_data/model/FoodCLIP-B-20-noc.pt'
+#image_tower='/media/fast_data/model/catlip_vit_base.pt'
+image_tower='/media/fast_data/model/clip-vit-base-patch16'
 
 deepspeed --include localhost:$gpus  llava/train/train_xformers.py \
     --deepspeed ./scripts/zero2.json \
@@ -20,7 +22,7 @@ deepspeed --include localhost:$gpus  llava/train/train_xformers.py \
     --mm_use_im_start_end False \
     --mm_use_im_patch_token False \
     --bf16 True \
-    --output_dir /mnt/data_llm/model/checkpoints/llava1.5-7b-vitl-pretrain \
+    --output_dir /mnt/data_llm/model/checkpoints/llava1.5-7b-clip_base-pretrain \
     --num_train_epochs 1 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
