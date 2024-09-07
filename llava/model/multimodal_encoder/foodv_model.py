@@ -31,12 +31,12 @@ from torch.utils.checkpoint import checkpoint
 from timm.models.layers import create_attn, get_norm_layer, get_norm_act_layer, create_conv2d, make_divisible, trunc_normal_tf_
 from dataclasses import dataclass, field
 
-from timm.layers import to_2tuple, DropPath, Format # , trunc_normal_
-from timm.layers.norm_act import _create_act
-from timm.models._registry import register_model
-from timm.models._manipulate import named_apply, checkpoint_seq
-from timm.models._builder import build_model_with_cfg
-from timm.models.vision_transformer import get_act_layer, Type, LayerType, Mlp, Block, PatchEmbed, VisionTransformer, checkpoint_filter_fn, get_init_weights_vit, init_weights_vit_timm, _load_weights 
+# from timm.layers import to_2tuple, DropPath, Format # , trunc_normal_
+# from timm.layers.norm_act import _create_act
+# from timm.models._registry import register_model
+# from timm.models._manipulate import named_apply, checkpoint_seq
+# from timm.models._builder import build_model_with_cfg
+# from timm.models.vision_transformer import get_act_layer, Type, LayerType, Mlp, Block, PatchEmbed, VisionTransformer, checkpoint_filter_fn, get_init_weights_vit, init_weights_vit_timm, _load_weights 
 import logging
 from collections import OrderedDict
 #

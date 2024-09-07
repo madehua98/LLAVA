@@ -2,7 +2,7 @@
 
 export PYTHONPATH=/home/data_llm/madehua/LLaVA
 cd /home/data_llm/madehua/LLaVA
-gpus="0,2,3,4,5,6,7,9"
+gpus="0,1,2,3,4,5,6,7"
 echo $gpus
 #image_tower='/media/fast_data/model/catlip_vit_base.pt'
 image_tower='/media/fast_data/model/clip-vit-large-patch14-336'
@@ -23,13 +23,13 @@ deepspeed --include localhost:$gpus llava/train/train_xformers.py \
     --group_by_modality_length True \
     --bf16 True \
     --output_dir /mnt/data_llm/model/checkpoints/llava1.5-7b-vitl-nofood-food172 \
-    --num_train_epochs 2 \
+    --num_train_epochs 4 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "epoch" \
-    --save_total_limit 2 \
+    --save_total_limit 4 \
     --learning_rate 2e-5 \
     --weight_decay 0. \
     --warmup_ratio 0.03 \

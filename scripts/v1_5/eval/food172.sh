@@ -3,11 +3,11 @@
 export PYTHONPATH=/home/data_llm/madehua/LLaVA
 cd /home/data_llm/madehua/LLaVA
 
-CUDA_VISIBLE_DEVICES=0 python llava/eval/model_vqa.py \
-    --model-path /mnt/data_llm/model/checkpoints/llava1.5-7b-vitl-nofood-food172/checkpoint-1032 \
+CUDA_VISIBLE_DEVICES=9 python llava/eval/model_vqa.py \
+    --model-path /media/fast_data/model/llava-v1.5-7b \
     --question-file \
-    /mnt/data_llm/json_file/172_questions.jsonl \
+    /mnt/data_llm/json_file/172_questions_noft_v1.jsonl \
     --image-folder \
     /media/fast_data \
     --answers-file \
-    /mnt/data_llm/json_file/llava1.5-7b-vitl-nofood-1032-172.jsonl
+    /mnt/data_llm/json_file/llava1.5-7b-172.jsonl

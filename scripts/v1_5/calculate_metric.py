@@ -26,6 +26,10 @@ def read_jsonl(file):
     with open(file, mode='r', encoding='utf-8') as fr:
         for line in fr.readlines():
             data = json.loads(line)
+            # try:
+            #     data = json.loads(line)
+            # except:
+            #     print(line)
             data_list.append(data)
     return data_list
 
@@ -60,39 +64,54 @@ def get_metrics(answer_file_path, gold_answer_file_path):
     answer_dict = {}
     idx = 0
 
+    # Build answer_dict with all keys in lowercase
     for data in gold_answer_file:
-        if data['text'] not in answer_dict.keys():
-            answer_dict[data['text']] = idx
+        key = data['text'].lower()
+        if key not in answer_dict:
+            answer_dict[key] = idx
             idx += 1
+    print(answer_dict)
     y_true = []
     for i in range(len(gold_answer_file)):
-        y = answer_dict[gold_answer_file[i]['text']]
+        # Ensure we access the correct lowercased key
+        y = answer_dict[gold_answer_file[i]['text'].lower()]
         y_true.append(y)
+
     y_pred = []
     question_ids = []
     for i in tqdm(range(len(answer_file))):
         if answer_file[i]['question_id'] not in question_ids:
             question_ids.append(answer_file[i]['question_id'])
-            if answer_file[i]['text'] in answer_dict.keys():
-                y = answer_dict[answer_file[i]['text']]
-                y_pred.append(y)
+            # Check and get the lowercased key from answer_dict
+            text_lower = answer_file[i]['text'].lower()
+            # is_substring = any(text_lower in key for key in answer_dict)
+            # if text_lower in answer_dict:
+            #     y = answer_dict[text_lower]
+            #     y_pred.append(y)
+            for key in answer_dict:
+                if text_lower in key:  # 判断 text_lower 是否为某个键的截断部分
+                    y = answer_dict[key]  # 获取对应的值
+                    y_pred.append(y)  # 添加到 y_pred 列表
             else:
-                answer, _ = find_most_similar_word(answer_file[i]['text'], list(answer_dict.keys()))
+                # Find the most similar word in lowercase
+                answer, _ = find_most_similar_word(text_lower, list(answer_dict.keys()))
                 y = answer_dict[answer]
                 y_pred.append(y)
-    
+
+    # Evaluate metrics
     metrics = evaluate_multiclass(y_true, y_pred)
-    accuracy = metrics['accuracy'] 
+    accuracy = metrics['accuracy']
     precision = metrics['precision']
     recall = metrics['recall']
     f1_score = metrics['f1_score']
     return accuracy, precision, recall, f1_score
 
 
+
 # if __name__ == "__main()__":
 gold_answer_file_path = "/mnt/data_llm/json_file/172_answers.jsonl"
-#answer_file_path = "/mnt/data_llm/json_file/llava1.5-7b-vitl-1184-101.jsonl"\
-sorted_answer_file_path = '/mnt/data_llm/json_file/llava1.5-7b-vitl-nofood-1032-172.jsonl'
+answer_file_path = '/home/data_llm/madehua/FoodHealthMMLLM/eval/food172/answers/MoE-LLaVA-Phi2-2.7B-4e-172-128-296.jsonl'
+sorted_answer_file_path = '/home/data_llm/madehua/FoodHealthMMLLM/eval/food172/answers/MoE-LLaVA-Phi2-2.7B-4e-172-retrieval-10.jsonl'
 #sorted_answer_file_path = "/mnt/data_llm/json_file/llava1.5-7b-vitl-1184-101.jsonl"
 #sort_jsonl_by_question_id(answer_file_path, sorted_answer_file_path)
 #sorted_answer_file_path = '/mnt/data_llm/json_file/llava1.5-7b-food101-101_questions.jsonl'

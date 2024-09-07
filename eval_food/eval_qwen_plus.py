@@ -33,7 +33,7 @@ def simple_multimodal_conversation_call(model, image_path):
             "role": "user",
             "content": [
                 {"image": image_path},
-                {"text": "What dish is this? Keep output as short as possible"}
+                {"text": "What dish is this? Just provide its category."}
             ]
         }
     ]
@@ -54,24 +54,29 @@ def simple_multimodal_conversation_call(model, image_path):
         print(f"Error in API call: {e}")
         return None
 
-def retry_call_simple_multimodal(model, image_path, retries=10):
+def retry_call_simple_multimodal(model, image_path, retries=2):
     """Retry the simple_multimodal_conversation_call up to `retries` times if None is returned."""
     for attempt in range(retries):
         category = simple_multimodal_conversation_call(model, image_path)
         if category is not None:
             return category
         print(f"Retry {attempt + 1}/{retries} failed. Retrying...")
+        time.sleep(5)
     print("Max retries reached. Returning None.")
     return None
 
 if __name__ == '__main__':
     questions_jsonl = '/mnt/data_llm/json_file/101_questions.jsonl'
     answers_jsonl = '/mnt/data_llm/json_file/101-qwen-vl-plus.jsonl'
+    exist_answers = load_jsonl(answers_jsonl)
     questions = load_jsonl(questions_jsonl)
+    existing_ids = {item['question_id'] for item in exist_answers}
+    # Filter out questions that have matching question_id in existing_ids
+    filtered_questions = [question for question in questions if question['question_id'] not in existing_ids]
     model = 'qwen-vl-plus'
     
     # 使用 tqdm 包装问题列表以显示进度条
-    for question in tqdm(questions, desc="Processing questions"):
+    for question in tqdm(filtered_questions, desc="Processing questions"):
         image = question.get('image')
         question_id = question.get('question_id')
         
