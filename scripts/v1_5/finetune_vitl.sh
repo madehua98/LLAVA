@@ -11,7 +11,7 @@ deepspeed --include localhost:$gpus llava/train/train_xformers.py \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path /media/fast_data/model/vicuna-7b-v1.5 \
     --version v1 \
-    --data_path /mnt/data_llm/json_file/172_train_prompt10.json \
+    --data_path /mnt/data_llm/json_file/101_train_retrieval.json \
     --image_folder /media/fast_data \
     --vision_tower $image_tower \
     --pretrain_mm_mlp_adapter /mnt/data_llm/model/checkpoints/llava1.5-7b-vitl-pretrain/mm_projector.bin \
@@ -22,8 +22,8 @@ deepspeed --include localhost:$gpus llava/train/train_xformers.py \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir /mnt/data_llm/model/checkpoints/llava1.5-7b-vitl-food172 \
-    --num_train_epochs 2 \
+    --output_dir /mnt/data_llm/model/checkpoints/llava1.5-7b-retrieval-food101 \
+    --num_train_epochs 4 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 4 \

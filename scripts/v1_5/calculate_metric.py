@@ -85,13 +85,13 @@ def get_metrics(answer_file_path, gold_answer_file_path):
             # Check and get the lowercased key from answer_dict
             text_lower = answer_file[i]['text'].lower()
             # is_substring = any(text_lower in key for key in answer_dict)
-            # if text_lower in answer_dict:
-            #     y = answer_dict[text_lower]
-            #     y_pred.append(y)
-            for key in answer_dict:
-                if text_lower in key:  # 判断 text_lower 是否为某个键的截断部分
-                    y = answer_dict[key]  # 获取对应的值
-                    y_pred.append(y)  # 添加到 y_pred 列表
+            if text_lower in answer_dict:
+                y = answer_dict[text_lower]
+                y_pred.append(y)
+            # for key in answer_dict:
+            #     if text_lower in key:  # 判断 text_lower 是否为某个键的截断部分
+            #         y = answer_dict[key]  # 获取对应的值
+            #         y_pred.append(y)  # 添加到 y_pred 列表
             else:
                 # Find the most similar word in lowercase
                 answer, _ = find_most_similar_word(text_lower, list(answer_dict.keys()))
@@ -109,9 +109,9 @@ def get_metrics(answer_file_path, gold_answer_file_path):
 
 
 # if __name__ == "__main()__":
-gold_answer_file_path = "/mnt/data_llm/json_file/172_answers.jsonl"
-answer_file_path = '/home/data_llm/madehua/FoodHealthMMLLM/eval/food172/answers/MoE-LLaVA-Phi2-2.7B-4e-172-128-296.jsonl'
-sorted_answer_file_path = '/home/data_llm/madehua/FoodHealthMMLLM/eval/food172/answers/MoE-LLaVA-Phi2-2.7B-4e-172-retrieval-10.jsonl'
+gold_answer_file_path = "/mnt/data_llm/json_file/101_answers.jsonl"
+answer_file_path = '/home/data_llm/madehua/FoodHealthMMLLM/eval/food172/answers/MoE-LLaVA-Phi2-2.7B-4e-172-retrieval-5.jsonl'
+sorted_answer_file_path = '/home/data_llm/madehua/LLaVA/scripts/v1_5/eval/101_answers_llava.jsonl'
 #sorted_answer_file_path = "/mnt/data_llm/json_file/llava1.5-7b-vitl-1184-101.jsonl"
 #sort_jsonl_by_question_id(answer_file_path, sorted_answer_file_path)
 #sorted_answer_file_path = '/mnt/data_llm/json_file/llava1.5-7b-food101-101_questions.jsonl'
